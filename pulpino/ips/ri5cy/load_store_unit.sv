@@ -69,7 +69,7 @@ module riscv_load_store_unit
     input  logic         ex_valid_i,
     output logic         busy_o
 
-`ifdef DIFT
+`ifdef DIFT //Tags à lire ou écrire
     ,
     output logic         data_we_o_tag,
     output logic         data_wdata_o_tag,

@@ -22,6 +22,7 @@
 //                 RiscV draft priviledged instruction set spec (v1.7)        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+// Ajout des registres TPR et TCR, y faudra qu'on vienne y rajouter THR
 
 `include "riscv_config.sv"
 
@@ -58,7 +59,7 @@ module riscv_cs_registers
   // Interrupts
   output logic        irq_enable_o,
   output logic [31:0] mepc_o,
-`ifdef DIFT
+`ifdef DIFT   //Définition en tant que sortie des registres TPR et TCR
   output logic [31:0] tpr_o,
   output logic [31:0] tcr_o,
 `endif
@@ -136,7 +137,7 @@ module riscv_cs_registers
   logic [ 0:0] mstatus_q, mstatus_n;
   logic [ 5:0] exc_cause, exc_cause_n;
 
-`ifdef DIFT
+`ifdef DIFT   // Variables pour la machine à états je pense
   logic [31:0] tpr_q, tpr_n;
   logic [31:0] tcr_q, tcr_n;
 `endif
@@ -179,7 +180,7 @@ module riscv_cs_registers
       12'h7B5: csr_rdata_int = hwlp_end_i[1];
       12'h7B6: csr_rdata_int = hwlp_cnt_i[1];
 
-    `ifdef DIFT
+    `ifdef DIFT // Ajout dans le CSR des registres TPR et TCR
       12'h700: csr_rdata_int = tpr_q;
       12'h701: csr_rdata_int = tcr_q;
     `endif
@@ -199,7 +200,7 @@ module riscv_cs_registers
     hwlp_we_o    = '0;
     hwlp_regid_o = '0;
 
-  `ifdef DIFT
+  `ifdef DIFT   // Mise à jour de la machine à états
     tpr_n = tpr_q;
     tcr_n = tcr_q;
   `endif
@@ -221,7 +222,7 @@ module riscv_cs_registers
       12'h7B5: if (csr_we_int) begin hwlp_we_o = 3'b010; hwlp_regid_o = 1'b1; end
       12'h7B6: if (csr_we_int) begin hwlp_we_o = 3'b100; hwlp_regid_o = 1'b1; end
 
-    `ifdef DIFT
+    `ifdef DIFT   // J'imagine que c'est l'update des registres TCR et TPR dans le CSR
       12'h700: if (csr_we_int) tpr_n = csr_wdata_int;
       12'h701: if (csr_we_int) tcr_n = csr_wdata_int;
     `endif
@@ -307,7 +308,7 @@ module riscv_cs_registers
       mestatus_q <= '0;
       exc_cause  <= '0;
 
-    `ifdef DIFT
+    `ifdef DIFT //Politiques de propagation et de check des tags
       tpr_q = 32'b00000000000000001010100010100010;
       tcr_q = 32'b00000000001101000001100000000000;
     `endif
@@ -323,7 +324,7 @@ module riscv_cs_registers
 
       exc_cause  <= exc_cause_n;
 
-    `ifdef DIFT
+    `ifdef DIFT // Mise à jour du CSR
       tpr_q = tpr_n;
       tcr_q = tcr_n;
     `endif

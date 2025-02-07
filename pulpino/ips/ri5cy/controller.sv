@@ -23,6 +23,8 @@
 // Description:    Main CPU controller of the processor                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+// Ajout dans ce fichier de "branch_taken_ex_i_tag" et "pc_set_o_tag", à voir leur utilité pour nous
+// Y a moyen que ce ne soient que pour le tag de pc, auquel cas on n'a pas besoin d'y toucher
 
 `include "riscv_config.sv"
 

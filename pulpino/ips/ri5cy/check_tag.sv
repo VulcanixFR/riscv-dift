@@ -10,6 +10,7 @@
 //                 Register and sends the proper signals to the EX stage      //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+// Decodeur spécial pour la partie CHECH du TPR, qui vient s'ajouter en parallèle du décodeur déjà présent sur le processeur
 
 import riscv_defines::*;
 

@@ -95,7 +95,7 @@ module riscv_ex_stage
   output logic        ex_valid_o, // EX stage gets new data
   input  logic        wb_ready_i  // WB stage ready for new data
 
-`ifdef DIFT
+`ifdef DIFT // Ajout de tous les tags des registres en entrée
   ,
   input  logic [ALU_MODE_WIDTH-1:0] alu_operator_i_mode,
   input  logic        alu_operand_a_i_tag,
@@ -132,7 +132,7 @@ module riscv_ex_stage
   logic        alu_ready;
   logic        mult_ready;
 
-`ifdef DIFT
+`ifdef DIFT 
   logic        alu_result_tag;
   logic        rf_enable_tag;
   logic        pc_enable_tag;
@@ -152,7 +152,7 @@ module riscv_ex_stage
   assign branch_decision_o      = alu_cmp_result;
   assign jump_target_o          = alu_operand_c_i;
 
-`ifdef DIFT
+`ifdef DIFT   //Mise à jour des tags
   // Register instruction except Load
   always_comb begin
     if (register_set_i_tag) begin
@@ -240,7 +240,7 @@ module riscv_ex_stage
   //                                                    //
   ////////////////////////////////////////////////////////
 
-`ifdef DIFT
+`ifdef DIFT // Récupération des infos du TPR prémachées par le décodeur
   riscv_tag_propagation_logic tag_propagation_logic_i
   (
     .operator_i           ( alu_operator_i_mode     ),
@@ -252,7 +252,7 @@ module riscv_ex_stage
   );
 `endif
 
-`ifdef DIFT
+`ifdef DIFT // Récupération des infos du TCR prémachées par le décodeur
   assign check_a = use_store_ops_i ? store_dest_addr_i_tag : alu_operand_a_i_tag;
   assign check_b = use_store_ops_i ? store_source_i_tag : alu_operand_b_i_tag;
 
@@ -332,7 +332,7 @@ module riscv_ex_stage
     end
   end
 
-`ifdef DIFT
+`ifdef DIFT // Mise à jour du tag dans le cadre du LOAD
   // Load
   always_ff @(posedge clk, negedge rst_n)
   begin
